@@ -1,8 +1,6 @@
 import socket
 import os
-from _thead import *
-    #socket
-    # TCP server code
+from _thread import *
 
 ServerSocket = socket.socket()
 host = '127.0.0.1'
@@ -14,20 +12,25 @@ try:
 except socket.error as e:
     print(str(e))
 
+print('Waiting for a Connection...')
+ServerSocket.listen(5)
 
+def thread_cli(connection):
+    connection.send(str.encode('Welcome to the server'))
+    while True:
+        data = connection.recv(2048)
+        print(data)
+        reply = 'Server says: ' + data.decode('utf-8')
+        if not data:
+            break
+        connection.sendall(str.encode(reply))
+        print(str.encode(reply))
+    connection.close()
 
-#host="localhost"
-#port=8080
-
-#sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-#sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-
-#sock.bind((host, port))
-
-#sock.listen(1000)
-#print("listening for connections...")
-#client,address = sock.accept()
-#print(f"{address} just connected!")
-
-#while True:
-#    try:      
+while True:
+    Client, address = ServerSocket.accept()
+    print('Connected to: ' + address[0] + ':' + str(address[1]))
+    start_new_thread(thread_cli, (Client, ))
+    ThreadCount += 1
+    print('Thread Number: ' + str(ThreadCount))
+ServerSocket.close()
