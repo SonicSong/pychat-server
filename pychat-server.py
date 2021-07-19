@@ -1,5 +1,6 @@
 import socket
 import os
+import time
 from _thread import *
 
 ServerSocket = socket.socket()
@@ -27,9 +28,23 @@ def thread_cli(connection):
         print(str.encode(reply))
     connection.close()
 
+##TODO:
+
+#give xxxxx^1 user 1
+#if xxxxx^2 is not equal to xxxxxx^1 give user 2
+
+#switch between users that allows to send data between them and not the same message sent
+#example: user 1 sent "HI"
+# user 2 sent "howdy"
+# user 1 recv "HI"
+# user 2 recv "howdy"
+
+
+
 while True:
     Client, address = ServerSocket.accept()
     print('Connected to: ' + address[0] + ':' + str(address[1]))
+    
     start_new_thread(thread_cli, (Client, ))
     ThreadCount += 1
     print('Thread Number: ' + str(ThreadCount))
